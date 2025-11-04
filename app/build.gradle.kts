@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.spoofing_gps"
+    namespace = "com.example.myapplication"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.spoofing_gps"
+        applicationId = "com.example.myapplication"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -31,10 +31,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
-    buildFeatures {
-        buildConfig = true
-    }
 }
 
 dependencies {
@@ -42,8 +38,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.play.services.basement)
-    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

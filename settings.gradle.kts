@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "spoofing_gps"
+rootProject.name = "My Application"
 include(":app")
  
