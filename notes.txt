@@ -1,0 +1,16 @@
+ao longo do tempo, arranjar uma janela temporal por exemplo em 5 seg medir a velocidade, variação de velocidade, desvios de direção
+o track_id é como se fosse um utilizador
+focar nas variancias: acelerações e mudanças de direção (esquerda para a direita)
+variação do angulo
+50% usado para testar, outros 50 para testar como dataset normal e depois testar com um dataset "real/maligno" para ver se é detetado
+media velocidade, media aceleração, variancias 
+podemos usar sliding
+correr pca no fim da divisão
+
+excluir tracks com menos de x entradas
+fazer sliding com janelas temporais de x tempo
+extrair as features de cada janela
+treinar os modelos 
+não esquecer pca
+
+pensar como fazer a codificação de informação
