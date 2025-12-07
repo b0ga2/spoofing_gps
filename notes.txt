@@ -7,7 +7,8 @@ media velocidade, media aceleração, variancias
 podemos usar sliding
 correr pca no fim da divisão
 
-excluir tracks com menos de x entradas
+excluir tracks com menos de x entradas - 
+Preencher linhas a 0 com dados da anterior
 fazer sliding com janelas temporais de x tempo
 extrair as features de cada janela
 treinar os modelos 
