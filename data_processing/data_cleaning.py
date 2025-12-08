@@ -4,7 +4,7 @@ import os
 file_path = 'go_track_trackspoints.csv'
 
 
-def load_csv():
+def load_csv(file_path: str):
     if not os.path.exists(file_path):
         print(f"ERRO: Ficheiro não encontrado no caminho: {file_path}")
         return None
@@ -16,7 +16,7 @@ def load_csv():
 
 # Remove tracks with less then X entries
 def clean_data(min_num_of_entries: int):
-    df = load_csv()
+    df = load_csv(file_path)
 
     df1 = df.groupby(['track_id']).count()
 

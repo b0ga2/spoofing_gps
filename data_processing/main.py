@@ -91,6 +91,7 @@ def process_gps_data(file_path, lat_col='latitude', lon_col='longitude', time_co
     df['bearing_deg'] = df.apply(lambda row: calculate_bearing(row['lat_prev'], row['lon_prev'], row[lat_col], row[lon_col]) 
                                  if row['lat_prev'] is not np.nan else 0.0, axis=1)
     
+    # Substituição dos campos a 0 pelos valores anteriores
     df['bearing_deg'] = (df['bearing_deg'].replace(0, np.nan).groupby(df['track_id']).ffill().fillna(0)
 )
 
