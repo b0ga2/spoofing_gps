@@ -15,3 +15,6 @@ treinar os modelos
 não esquecer pca
 
 pensar como fazer a codificação de informação
+
+verificar sliding no csv com window_id
+o código está a fazer janelas sequenciais

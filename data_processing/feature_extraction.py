@@ -2,6 +2,7 @@ import pandas as pd
 from data_cleaning import load_csv 
 from datetime import datetime, timedelta
 import math
+import csv
 
 def get_features_stats(windata,cols):
   features=[]
