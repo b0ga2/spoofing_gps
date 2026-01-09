@@ -3,9 +3,9 @@ from pyod.models.auto_encoder import AutoEncoder
 from sklearn.covariance import EllipticEnvelope
 from sklearn.preprocessing import MaxAbsScaler
 from sklearn.ensemble import IsolationForest
-import numpy as np, pandas as pd, sys
 from data_cleaning import load_csv
 from sklearn import svm
+import numpy as np, sys
 
 def load_and_clean_data(filepath):
     df = load_csv(filepath)
