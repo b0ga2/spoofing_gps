@@ -1,6 +1,6 @@
+import os, math, sys
 import pandas as pd
 import numpy as np
-import os, math
 
 # raio da terra em metros (aproximado)
 R_EARTH = 6371000 
@@ -83,11 +83,11 @@ def process_gps_data(file_path, lat_col='latitude', lon_col='longitude', time_co
     return df
 
 if __name__ == '__main__':
-    file_path = 'data_cleaning.csv'
+    file_path = sys.argv[1]
     df_final = process_gps_data(file_path)
 
     if df_final is not None:
         print("\n--- Primeiras Linhas do Resultado ---")
         print(df_final[['track_id', 'time', 'distance_m', 'time_diff_s', 'speed_mps', 'acceleration_mps2', 'bearing_deg']].head(10))
 
-        df_final.to_csv('generate_features.csv', index=False)
+        df_final.to_csv(sys.argv[2], index=False)

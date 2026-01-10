@@ -1,6 +1,7 @@
 from data_cleaning import load_csv
 from datetime import timedelta
 import pandas as pd
+import sys
 
 def get_features_stats(windata,cols):
     features=[]
@@ -14,7 +15,7 @@ def get_features_stats(windata,cols):
     return(features)
 
 def grouping_by_time(size_window: int, sliding_time: int) -> pd.DataFrame:
-    data = load_csv("generate_features.csv")
+    data = load_csv(sys.argv[1])
     data["time"] = pd.to_datetime(data["time"], format="%Y-%m-%d %H:%M:%S")
 
     cols_stats = ["speed_mps", "acceleration_mps2", "bearing_deg"]
@@ -50,7 +51,7 @@ def grouping_by_time(size_window: int, sliding_time: int) -> pd.DataFrame:
             current_start += step_duration
 
     result_df = pd.DataFrame(all_window_results, columns=final_headers)
-    result_df.to_csv("feature_extraction.csv", index=False)
+    result_df.to_csv(sys.argv[2], index=False)
 
     return result_df
 
