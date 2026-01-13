@@ -18,3 +18,10 @@ pensar como fazer a codificação de informação
 
 verificar sliding no csv com window_id
 o código está a fazer janelas sequenciais
+
+
+(2026-01-13)
+Encode X
+Fazer um modelo geral e um por track id
+Fazer um ensemble por F1 score
+Incluir matriz de confusão (mostrar TP, TN, FP, FN, Recall, Precision and F1-Score) X
