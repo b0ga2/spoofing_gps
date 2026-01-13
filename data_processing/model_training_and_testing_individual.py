@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.preprocessing import RobustScaler
 from sklearn.decomposition import PCA
 from sklearn import svm
@@ -10,7 +8,6 @@ from sklearn.neighbors import LocalOutlierFactor
 from sklearn.covariance import EllipticEnvelope
 from pyod.models.auto_encoder import AutoEncoder
 import warnings
-import sys
 
 warnings.filterwarnings("ignore")
 
@@ -45,16 +42,16 @@ print(f"A processar {len(unique_tracks)} tracks individualmente...\n")
 for track_id in unique_tracks:
     track_normal = normal_filled[normal_filled['track_id'] == track_id]
     track_anomalous = anomalous_filled[anomalous_filled['track_id'] == track_id]
-    
+
     if len(track_normal) < 5: 
         continue
 
     # Identificar Ground Truth
     df1_local = track_normal[all_cols].reset_index(drop=True)
     df2_local = track_anomalous[all_cols].reset_index(drop=True)
-    
+
     diff_mask = (df1_local != df2_local).any(axis=1)
-    
+
     anom_idx_local = df1_local.index[diff_mask]
     norm_idx_local = df1_local.index[~diff_mask]
 
@@ -93,7 +90,7 @@ for track_id in unique_tracks:
         try:
             algorithm = model_factory()
             algorithm.fit(X_train_proc)
-            
+
             # Prediction Logic
             if name == "Autoencoder":
                 pred_anom = algorithm.predict(X_test_anom_proc) if len(X_test_anom_proc) > 0 else []
@@ -109,7 +106,7 @@ for track_id in unique_tracks:
                 fn = np.sum(pred_anom == 1)
                 fp = np.sum(pred_norm == -1)
                 tn = np.sum(pred_norm == 1)
-            
+
             # Metrics Calculation
             recall = tp / (tp + fn) if (tp + fn) > 0 else 0
             precision = tp / (tp + fp) if (tp + fp) > 0 else 0
@@ -129,7 +126,7 @@ for track_id in unique_tracks:
                 "Precision": precision,
                 "F1_Score": f1_score
             })
-            
+
         except Exception as e:
             print(f"Erro no modelo {name}: {e}")
 

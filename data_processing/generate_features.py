@@ -43,22 +43,22 @@ def process_gps_data(file_path, lat_col='latitude', lon_col='longitude', time_co
     df['lon_prev'] = df.groupby(track_col)[lon_col].shift(1)
     df['time_prev'] = df.groupby(track_col)[time_col].shift(1)
 
-    # 1. Distance & Time
+    # Distance & Time
     df['distance_m'] = np.where(df['lat_prev'].notna(), haversine_distance(df['lat_prev'], df['lon_prev'], df[lat_col], df[lon_col]), 0.0)
     df['time_diff_s'] = (df[time_col] - df['time_prev']).dt.total_seconds().fillna(0.0)
 
-    # 2. Speed (m/s)
+    # Speed (m/s)
     df['speed_mps'] = np.where(df['time_diff_s'] > 0, df['distance_m'] / df['time_diff_s'], 0.0)
 
-    # 3. Acceleration (m/s^2)
+    # Acceleration (m/s^2)
     df['speed_prev'] = df.groupby(track_col)['speed_mps'].shift(1)
     df['acceleration_mps2'] = np.where(df['time_diff_s'] > 0, (df['speed_mps'] - df['speed_prev']) / df['time_diff_s'], 0.0)
 
-    # 4. NEW FEATURE: Jerk (m/s^3) - The derivative of acceleration
+    # Jerk (m/s^3) - The derivative of acceleration
     df['accel_prev'] = df.groupby(track_col)['acceleration_mps2'].shift(1)
     df['jerk_mps3'] = np.where(df['time_diff_s'] > 0, (df['acceleration_mps2'] - df['accel_prev']) / df['time_diff_s'], 0.0)
 
-    # 5. Bearing
+    # Bearing
     df['bearing_deg'] = df.apply(lambda row: calculate_bearing(row['lat_prev'], row['lon_prev'], row[lat_col], row[lon_col]) 
                                  if row['lat_prev'] is not np.nan else 0.0, axis=1)
     df['bearing_deg'] = df['bearing_deg'].replace(0, np.nan).groupby(df['track_id']).ffill().fillna(0)

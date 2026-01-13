@@ -1,4 +1,4 @@
-from data_cleaning import load_csv # Assuming this exists as per your original file
+from data_cleaning import load_csv
 from datetime import timedelta
 import pandas as pd
 import numpy as np
@@ -6,7 +6,7 @@ import sys
 
 def get_features_stats(windata, cols):
     features = []
-    
+
     # Calculate base stats
     means = windata[cols].mean()
     variances = windata[cols].var().fillna(0)
@@ -14,18 +14,12 @@ def get_features_stats(windata, cols):
     mins = windata[cols].min()
     quantiles = windata[cols].quantile(0.9)
 
-    # 1. Mean
     features = features + list(means)
-    # 2. Variance
     features = features + list(variances)
-    # 3. Max
     features = features + list(maxs)
-    # 4. Min
     features = features + list(mins)
-    # 5. Quantile
     features = features + list(quantiles)
-    
-    # 6. NEW STATISTIC: Log Variance
+
     # We use log1p (log(1+x)) to handle zeros safely and squash massive spikes
     log_variances = np.log1p(variances)
     features = features + list(log_variances)
@@ -36,10 +30,7 @@ def grouping_by_time(size_window: int, sliding_time: int):
     data = load_csv(sys.argv[1])
     data["time"] = pd.to_datetime(data["time"], format="%Y-%m-%d %H:%M:%S")
 
-    # Added "jerk_mps3" to the columns list
     cols_stats = ["speed_mps", "acceleration_mps2", "jerk_mps3", "bearing_deg"]
-    
-    # Added "log_var" to the stats list
     calculated_stats = ["mean", "var", "max", "min", "quantile_0.9", "log_var"]
 
     # Generate headers dynamically
