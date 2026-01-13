@@ -14,18 +14,12 @@ def get_features_stats(windata, cols):
     mins = windata[cols].min()
     quantiles = windata[cols].quantile(0.9)
 
-    # 1. Mean
     features = features + list(means)
-    # 2. Variance
     features = features + list(variances)
-    # 3. Max
     features = features + list(maxs)
-    # 4. Min
     features = features + list(mins)
-    # 5. Quantile
     features = features + list(quantiles)
     
-    # 6. NEW STATISTIC: Log Variance
     # We use log1p (log(1+x)) to handle zeros safely and squash massive spikes
     log_variances = np.log1p(variances)
     features = features + list(log_variances)
@@ -36,13 +30,10 @@ def grouping_by_time(size_window: int, sliding_time: int):
     data = load_csv(sys.argv[1])
     data["time"] = pd.to_datetime(data["time"], format="%Y-%m-%d %H:%M:%S")
 
-    # Added "jerk_mps3" to the columns list
     cols_stats = ["speed_mps", "acceleration_mps2", "jerk_mps3", "bearing_deg"]
     
-    # Added "log_var" to the stats list
     calculated_stats = ["mean", "var", "max", "min", "quantile_0.9", "log_var"]
 
-    # Generate headers dynamically
     feature_headers = [f"{col}_{stat}" for stat in calculated_stats for col in cols_stats]
     final_headers = ["track_id", "window_start_time", "window_end_time"] + feature_headers
 
@@ -74,7 +65,6 @@ def grouping_by_time(size_window: int, sliding_time: int):
 
     result_df = pd.DataFrame(all_window_results, columns=final_headers)
     result_df.to_csv(sys.argv[2], index=False)
-    print(f"Extraction complete. New features (Log-Var & Jerk) saved to {sys.argv[2]}")
 
     return result_df
 

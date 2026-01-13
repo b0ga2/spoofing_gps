@@ -11,7 +11,6 @@ from sklearn.neighbors import LocalOutlierFactor
 from sklearn.covariance import EllipticEnvelope
 from pyod.models.auto_encoder import AutoEncoder
 
-
 # Load Data
 normal_df = pd.read_csv('feature_extraction.csv')
 anomalous_df = pd.read_csv('feature_extraction_anomalous.csv')
@@ -36,14 +35,13 @@ normal_indices = df1.index[~diff_mask]
 
 print(f"Ground Truth: Found {len(anomalous_indices)} actual anomalies in the dataset.")
 
+
 # Prepare Data & Apply Log Transform
-# We use log1p to squash massive variance spikes (e.g. 100,000 -> 11.5)
-# This makes the data "linearly separable" for models like Linear SVM.
 X_train = np.log1p(np.abs(normal_filled[feature_cols].values))
 X_test_anom = np.log1p(np.abs(anomalous_filled.loc[anomalous_indices, feature_cols].values))
 X_test_norm = np.log1p(np.abs(anomalous_filled.loc[normal_indices, feature_cols].values))
 
-# Scaling and PCA
+# Scaling
 scaler = RobustScaler()
 
 # Dynamic PCA: Use 5 components, or fewer if we have fewer features
@@ -66,8 +64,7 @@ anomaly_algorithms = [
     ("One-Class SVM (Poly)", svm.OneClassSVM(nu=outliers_fraction, kernel="poly", degree=5, gamma=0.1)),
     ("One-Class SVM (RBF)", svm.OneClassSVM(nu=outliers_fraction, kernel="rbf", gamma=0.1)),
     ("Isolation Forest", IsolationForest(contamination=outliers_fraction, random_state=42)),
-    ("Local Outlier Factor", LocalOutlierFactor(n_neighbors=50, novelty=True, contamination=outliers_fraction)),
-     ("Autoencoder", AutoEncoder(contamination=outliers_fraction, hidden_neuron_list=[16], verbose=0)),
+    ("Autoencoder", AutoEncoder(contamination=outliers_fraction, hidden_neuron_list=[16], verbose=0)),
 ]
 
 
@@ -137,4 +134,4 @@ for name, algorithm in anomaly_algorithms:
     plt.ylabel('Label Real')
     plt.xlabel('Label Prevista')
     plt.tight_layout()
-    # plt.show()
+    plt.show()

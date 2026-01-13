@@ -1,5 +1,5 @@
 
-M_SIZE_PER_ENTRY = 8
+M_SIZE_PER_ENTRY = 32
 
 if __name__ == '__main__':
     a = [

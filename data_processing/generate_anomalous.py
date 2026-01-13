@@ -6,7 +6,7 @@ if __name__ == '__main__':
     data = load_csv(sys.argv[1])
 
     # size in bits
-    M_SIZE_PER_ENTRY = 32
+    M_SIZE_PER_ENTRY = 0
     M = "test test in TPR for testing"
     M = ''.join([bin(ord(c)).split('b')[1].rjust(8, '0') for c in M])
 

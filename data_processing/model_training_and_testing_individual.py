@@ -32,7 +32,6 @@ model_templates = [
     ("One-Class SVM (Poly)", lambda: svm.OneClassSVM(nu=outliers_fraction, kernel="poly", degree=5, gamma=0.1, max_iter=5000)),
     ("One-Class SVM (RBF)", lambda: svm.OneClassSVM(nu=outliers_fraction, kernel="rbf", gamma=0.1)),
     ("Isolation Forest", lambda: IsolationForest(contamination=outliers_fraction, random_state=42)),
-    ("Local Outlier Factor", lambda: LocalOutlierFactor(n_neighbors=50, novelty=True, contamination=outliers_fraction)),
      ("Autoencoder", lambda: AutoEncoder(contamination=outliers_fraction, hidden_neuron_list=[16], verbose=0)),
 ]
 
@@ -135,11 +134,11 @@ for track_id in unique_tracks:
 
 if detailed_results:
     results_df = pd.DataFrame(detailed_results)
-    output_filename = "resultados_detalhados_por_track.csv"
+    output_filename = "results.csv"
     results_df.to_csv(output_filename, index=False)
     print(f"\n\n[Concluído] Resultados detalhados guardados em: {output_filename}")
     
-    print("\nTop 5 Melhores Deteções (F1-Score):")
+    print("\nTop 5 (F1-Score):")
     print(results_df.sort_values(by="F1_Score", ascending=False).head(5)[['Track_ID', 'Model', 'F1_Score', 'TP', 'FP']])
 else:
     print("Nenhum resultado gerado.")
