@@ -58,7 +58,7 @@ X_test_anom_processed = pca.transform(scaler.transform(X_test_anom))
 X_test_norm_processed = pca.transform(scaler.transform(X_test_norm))
 
 # Define the Models
-outliers_fraction = 0.001
+outliers_fraction = 0.0001
 
 anomaly_algorithms = [
     ("EllipticEnvelope", EllipticEnvelope(contamination=outliers_fraction, support_fraction=0.8, random_state=42)),

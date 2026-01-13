@@ -25,11 +25,11 @@ feature_cols = all_cols
 
 print(f"Features selecionadas: {len(feature_cols)}")
 
-outliers_fraction = 0.001
+outliers_fraction = 0.01
 model_templates = [
     ("EllipticEnvelope", lambda: EllipticEnvelope(contamination=outliers_fraction, support_fraction=0.8, random_state=42)),
     ("One-Class SVM (Linear)", lambda: svm.OneClassSVM(nu=outliers_fraction, kernel="linear", gamma=0.1)),
-    ("One-Class SVM (Poly)", lambda: svm.OneClassSVM(nu=outliers_fraction, kernel="poly", degree=5, gamma=0.1)),
+    ("One-Class SVM (Poly)", lambda: svm.OneClassSVM(nu=outliers_fraction, kernel="poly", degree=5, gamma=0.1, max_iter=5000)),
     ("One-Class SVM (RBF)", lambda: svm.OneClassSVM(nu=outliers_fraction, kernel="rbf", gamma=0.1)),
     ("Isolation Forest", lambda: IsolationForest(contamination=outliers_fraction, random_state=42)),
     ("Local Outlier Factor", lambda: LocalOutlierFactor(n_neighbors=50, novelty=True, contamination=outliers_fraction)),
