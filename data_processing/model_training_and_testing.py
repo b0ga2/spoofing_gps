@@ -12,23 +12,20 @@ from sklearn.covariance import EllipticEnvelope
 from pyod.models.auto_encoder import AutoEncoder
 
 
-# 1. Load Data
+# Load Data
 normal_df = pd.read_csv('feature_extraction.csv')
 anomalous_df = pd.read_csv('feature_extraction_anomalous.csv')
 
 normal_filled = normal_df.fillna(0)
 anomalous_filled = anomalous_df.fillna(0)
 
-# 2. FEATURE SELECTION & TRANSFORMATION (Crucial Step)
-# We select columns that contain 'var' (variance) or 'jerk'.
-# These features are most sensitive to the LSB attack noise.
+# FEATURE SELECTION & TRANSFORMATION
 all_cols = [c for c in normal_df.columns if c not in ['track_id', 'window_start_time', 'window_end_time']]
-feature_cols = [c for c in all_cols if 'var' in c or 'jerk' in c]
-
+feature_cols = all_cols
 
 print(f"Training on {len(feature_cols)} features: {feature_cols}")
 
-# 3. Identify Ground Truth
+# Identify Ground Truth
 # We compare the two dataframes to find exactly which rows were modified
 df1 = normal_filled[all_cols]
 df2 = anomalous_filled[all_cols]
@@ -39,15 +36,14 @@ normal_indices = df1.index[~diff_mask]
 
 print(f"Ground Truth: Found {len(anomalous_indices)} actual anomalies in the dataset.")
 
-# 4. Prepare Data & Apply Log Transform
+# Prepare Data & Apply Log Transform
 # We use log1p to squash massive variance spikes (e.g. 100,000 -> 11.5)
 # This makes the data "linearly separable" for models like Linear SVM.
 X_train = np.log1p(np.abs(normal_filled[feature_cols].values))
 X_test_anom = np.log1p(np.abs(anomalous_filled.loc[anomalous_indices, feature_cols].values))
 X_test_norm = np.log1p(np.abs(anomalous_filled.loc[normal_indices, feature_cols].values))
 
-# 5. Scaling and PCA
-# We use RobustScaler because it handles outliers better than MaxAbsScaler
+# Scaling and PCA
 scaler = RobustScaler()
 
 # Dynamic PCA: Use 5 components, or fewer if we have fewer features
@@ -61,7 +57,7 @@ X_train_processed = pca.fit_transform(scaler.fit_transform(X_train))
 X_test_anom_processed = pca.transform(scaler.transform(X_test_anom))
 X_test_norm_processed = pca.transform(scaler.transform(X_test_norm))
 
-# 6. Define the Models
+# Define the Models
 outliers_fraction = 0.001
 
 anomaly_algorithms = [
@@ -115,7 +111,6 @@ for name, algorithm in anomaly_algorithms:
         # True Negatives: Normais previstos como 1
         TN = np.sum(pred_norm == 1)
 
-    # --- Metrics Formulas ---
     # Recall (Sensitivity/TPR) = TP / (TP + FN)
     recall = TP / (TP + FN) if (TP + FN) > 0 else 0
     
