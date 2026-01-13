@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import sys
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import RobustScaler
@@ -18,7 +17,7 @@ anomalous_df = pd.read_csv('feature_extraction_anomalous.csv')
 normal_filled = normal_df.fillna(0)
 anomalous_filled = anomalous_df.fillna(0)
 
-# FEATURE SELECTION & TRANSFORMATION
+# feature selection & transformation
 all_cols = [c for c in normal_df.columns if c not in ['track_id', 'window_start_time', 'window_end_time']]
 feature_cols = all_cols
 
@@ -67,42 +66,39 @@ anomaly_algorithms = [
     ("Autoencoder", AutoEncoder(contamination=outliers_fraction, hidden_neuron_list=[16], verbose=0)),
 ]
 
-
 print(f"\n--- Model Results ---")
 print(f"Training on {len(X_train)} samples.")
 print(f"Testing on {len(X_test_anom)} Anomalies and {len(X_test_norm)} Normal samples.\n")
 
 for name, algorithm in anomaly_algorithms:
-    
     # Train
     algorithm.fit(X_train_processed)
-    
+
     # --- Prediction & Metrics Calculation ---
     if name == "Autoencoder":
         # PyOD: 1 = Anomaly (Positive), 0 = Normal (Negative)
         pred_anom = algorithm.predict(X_test_anom_processed)
         pred_norm = algorithm.predict(X_test_norm_processed)
-        
+
         # True Positives: Anomalias previstas como 1
         TP = np.sum(pred_anom == 1)
         # False Negatives: Anomalias previstas como 0
         FN = np.sum(pred_anom == 0)
-        
+
         # False Positives: Normais previstos como 1
         FP = np.sum(pred_norm == 1)
         # True Negatives: Normais previstos como 0
         TN = np.sum(pred_norm == 0)
-        
     else:
         # Sklearn: -1 = Anomaly (Positive), 1 = Normal (Negative)
         pred_anom = algorithm.predict(X_test_anom_processed)
         pred_norm = algorithm.predict(X_test_norm_processed)
-        
+
         # True Positives: Anomalias previstas como -1
         TP = np.sum(pred_anom == -1)
         # False Negatives: Anomalias previstas como 1
         FN = np.sum(pred_anom == 1)
-        
+
         # False Positives: Normais previstos como -1
         FP = np.sum(pred_norm == -1)
         # True Negatives: Normais previstos como 1
@@ -110,10 +106,10 @@ for name, algorithm in anomaly_algorithms:
 
     # Recall (Sensitivity/TPR) = TP / (TP + FN)
     recall = TP / (TP + FN) if (TP + FN) > 0 else 0
-    
+
     # Precision = TP / (TP + FP)
     precision = TP / (TP + FP) if (TP + FP) > 0 else 0
-    
+
     # F1-Score = 2 * (Precision * Recall) / (Precision + Recall)
     f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
 
@@ -134,4 +130,8 @@ for name, algorithm in anomaly_algorithms:
     plt.ylabel('Label Real')
     plt.xlabel('Label Prevista')
     plt.tight_layout()
+<<<<<<< HEAD
     plt.show()
+=======
+    # plt.show()
+>>>>>>> ccdf09e0eb22bff8a0c82eccbec3f65e19d53e2b

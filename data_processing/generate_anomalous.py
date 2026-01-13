@@ -1,6 +1,5 @@
 from data_cleaning import load_csv
 import sys
-import time
 
 if __name__ == '__main__':
     data = load_csv(sys.argv[1])
