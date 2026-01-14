@@ -5,7 +5,7 @@ if __name__ == '__main__':
     data = load_csv(sys.argv[1])
 
     # size in bits
-    M_SIZE_PER_ENTRY = 0
+    M_SIZE_PER_ENTRY = 16
     M = "test test in TPR for testing"
     M = ''.join([bin(ord(c)).split('b')[1].rjust(8, '0') for c in M])
 
@@ -14,7 +14,6 @@ if __name__ == '__main__':
     for track_id in list_track_id:
         df = data[data['track_id'] == track_id].sort_values('time')
         if df.empty:
-            # print(f"{track_id} was discarted")
             continue
 
         for entry_idx in range(len(df["latitude"])):
@@ -25,7 +24,6 @@ if __name__ == '__main__':
 
             idx = M_SIZE_PER_ENTRY * entry_idx
             if idx >= len(M):
-                # print(f"{track_id} was broke")
                 break
 
             # get the corresponding M_SIZE_PER_ENTRY bits from the message (to be encoded)
@@ -36,5 +34,8 @@ if __name__ == '__main__':
 
             new_entry = float(str(df["latitude"].iloc[0]).split('.')[0] + '.' + str(int(''.join(b), 2)))
             data.at[entry_idx + rows, "latitude"] = new_entry
+            print(new_entry)
+        exit()
+
         rows += len(df["latitude"]) 
     data.to_csv(sys.argv[2], index=False)
